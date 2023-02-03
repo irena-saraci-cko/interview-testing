@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 
-using PaymentGateway.Application.Dtos.CreatePayment;
 
 namespace PaymentGateway.Api.Controllers
 {
