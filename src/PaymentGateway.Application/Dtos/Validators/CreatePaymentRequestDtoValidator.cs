@@ -1,6 +1,7 @@
 using FluentValidation;
 
 using PaymentGateway.Application.Dtos.CreatePayment;
+using PaymentGateway.Domain.Helpers;
 
 namespace PaymentGateway.Application.Dtos.Validators
 {
@@ -11,67 +12,82 @@ namespace PaymentGateway.Application.Dtos.Validators
         public CreatePaymentRequestDtoValidator()
         {
             RuleFor(p => p.CardNumber)
+            .Cascade(CascadeMode.Stop)
                 .NotEmpty()
+                    .WithMessage(ErrorCodes.CardNumberRequired)
                 .NotNull()
-                    .WithMessage("card_number_required")
+                    .WithMessage(ErrorCodes.CardNumberRequired)
                 .Length(14, 19)
-                    .WithMessage("card_number_must_be_between_14_and_19_characters_long")
+                    .WithMessage(ErrorCodes.CardNumberInvalidLength)
                 .Matches(numbersOnlyRegex)
-                    .WithMessage("card_number_must_contain_only_numbers")
+                    .WithMessage(ErrorCodes.CardNumberInvalidFormat)
                 .CreditCard()
-                    .WithMessage("invalid_credit_card");
+                    .WithMessage(ErrorCodes.CardNumberInvalid);
 
-            RuleFor(p => new { p.ExpiryMonth, p.ExpiryYear })
-                .Must(date => IsFutureData(date.ExpiryMonth, date.ExpiryYear))
-                    .WithMessage("expiry_data_must_be_in_the_future")
+            
+                RuleFor(p => p.ExpiryMonth)
+                                    .Cascade(CascadeMode.Stop)
+                                .NotEmpty()
+                                    .WithMessage(ErrorCodes.ExpiryMonthRequired)
+                                .NotNull()
+                                    .WithMessage(ErrorCodes.ExpiryMonthRequired)
+                                .InclusiveBetween(1, 12)
+                                    .WithMessage(ErrorCodes.ExpiryMonthInvalid)
                         .DependentRules(() =>
                         {
-                            RuleFor(p => p.ExpiryMonth)
-                            .NotEmpty()
-                            .NotNull()
-                                .WithMessage("expiry_month_required")
-                            .GreaterThanOrEqualTo(1)
-                            .LessThanOrEqualTo(12)
-                                .WithMessage("expiry_month_must_be_between_1_and_12");
-
                             RuleFor(p => p.ExpiryYear)
+                                .Cascade(CascadeMode.Stop)
                                 .NotEmpty()
+                                    .WithMessage(ErrorCodes.ExpiryYearRequired)
                                 .NotNull()
-                                    .WithMessage("expiry_year_required");
+                                    .WithMessage(ErrorCodes.ExpiryYearRequired)
+                            .DependentRules(() =>
+                            {
+                                RuleFor(p => new { p.ExpiryMonth, p.ExpiryYear })
+                                    .Must(date => IsFutureData(date.ExpiryMonth, date.ExpiryYear))
+                                        .WithMessage(ErrorCodes.ExpiryDateInvalid);
+                            });
                         });
 
+
             RuleFor(p => p.Currency)
+            .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Null()
-                    .WithMessage("currency_required")
+                    .WithMessage(ErrorCodes.CurrencyRequired)
+                .NotNull()
+                    .WithMessage(ErrorCodes.CurrencyRequired)
                 .Length(3)
-                    .WithMessage("currency_must_be_3_characters_long")
+                    .WithMessage(ErrorCodes.CurrencyInvalidLength)
                 .Must(c => availableCurrencies
                     .Any(p => p.ToLower() == c.ToLower()))
-                    .WithMessage("currency_invalid"); ;
+                    .WithMessage(ErrorCodes.CurrencyInvalid);
 
             RuleFor(p => p.Amount)
+            .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .Null()
-                    .WithMessage("amount_required")
+                    .WithMessage(ErrorCodes.AmountRequired)
+                .NotNull()
+                    .WithMessage(ErrorCodes.AmountRequired)
                 .GreaterThan(0)
-                    .WithMessage("amount_must_be_greater_than_0");
+                    .WithMessage(ErrorCodes.AmountInvalid);
 
             RuleFor(p => p.Cvv)
-               .NotEmpty()
-               .Null()
-                   .WithMessage("cvv_required")
-               .Length(3, 4)
-               .WithMessage("cvv_must_be_between_3_and_4_characters_long")
-               .Matches(numbersOnlyRegex)
-                   .WithMessage("cvv_must_contain_only_numbers");
+            .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                    .WithMessage(ErrorCodes.CvvRequired)
+                .NotNull()
+                   .WithMessage(ErrorCodes.CvvRequired)
+                .Length(3, 4)
+                    .WithMessage(ErrorCodes.CvvInvalidLength)
+                .Matches(numbersOnlyRegex)
+                   .WithMessage(ErrorCodes.CvvInvalidFormat);
 
         }
 
         private bool IsFutureData(int expiryMonth, int expiryYear)
         {
             //keep the card valid during the last month
-            var expiryDate = new DateTime(month: expiryMonth + 1, year: expiryYear, day: 1);
+            var expiryDate = new DateTime(year: expiryYear, month: expiryMonth + 1, day: 1);
 
             return expiryDate > DateTime.Today;
         }

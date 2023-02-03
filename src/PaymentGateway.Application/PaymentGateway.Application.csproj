@@ -12,4 +12,8 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PaymentGateway.Domain\PaymentGateway.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
