@@ -1,14 +1,14 @@
 namespace PaymentGateway.Application.Dtos.CreatePayment
 {
-    public class CreatePaymentResponseDto
+    public record CreatePaymentResponseDto
     {
-        public Guid Id { get; set; }
-        public string Status { get; set; } = string.Empty;
-        public string MaskedCardNumber { get; set; } = string.Empty;
-        public int ExpiryMonth { get; set; }
-        public int ExpiryYear { get; set; }
-        public string Currency { get; set; } = string.Empty;
-        public int Amount { get; set; }
+        public Guid Id { get; init; }
+        public string Status { get; init; } = string.Empty;
+        public string MaskedCardNumber { get; init; } = string.Empty;
+        public int ExpiryMonth { get; init; }
+        public int ExpiryYear { get; init; }
+        public string Currency { get; init; } = string.Empty;
+        public int Amount { get; init; }
 
     }
 }
