@@ -13,7 +13,13 @@ using PaymentGateway.Application.Mapper;
 using PaymentGateway.Application.Service;
 using PaymentGateway.BankAcquirer.Services;
 
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((ctx, lc)=> lc
+    .ReadFrom.Configuration(ctx.Configuration)
+);
+
 
 // Add services to the container.
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -30,13 +36,15 @@ builder.Services.AddScoped<IPaymentProcessorService, PaymentProcessorService>();
 builder.Services.AddScoped<IAcquirerService, AcquirerService>();
 builder.Services.AddHttpClient<IAcquirerService, AcquirerService>(client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration.GetSection("Acquirer:BaseUrl").Value);
+    client.BaseAddress = new Uri(builder.Configuration.GetSection("AcquirerBank:BaseUrl").Value);
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFluentValidationRulesToSwagger();
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfile>());
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<AutoMapperProfile>();
+});
 
 var app = builder.Build();
 

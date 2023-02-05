@@ -18,7 +18,7 @@ namespace PaymentGateway.Application.Mapper
             CreateMap<CreatePaymentRequestDto, Payment>();
 
             CreateMap<CreatePaymentRequestDto, CreatePaymentAcquirerRequest>()
-            .ForMember(x => x.ExpiryDate, y => y.MapFrom(s => $"{s.ExpiryMonth}/{s.ExpiryYear}"));
+            .ForMember(x => x.ExpiryDate, y => y.MapFrom(s => s.ExpiryDate()));
         }
     }
 }

@@ -6,7 +6,7 @@ namespace PaymentGateway.Application.Dtos.Validators
 {
     public class CreatePaymentRequestDtoValidator : AbstractValidator<CreatePaymentRequestDto>
     {
-        private static readonly string[] availableCurrencies = new string[] { "ALL", "EUR", "GBP" };
+        private static readonly string[] availableCurrencies = new string[] { "USD", "EUR", "GBP" };
         private static readonly string numbersOnlyRegex = "^[0-9]*$";
         public CreatePaymentRequestDtoValidator()
         {
@@ -19,9 +19,7 @@ namespace PaymentGateway.Application.Dtos.Validators
                 .Length(14, 19)
                     .WithMessage(ErrorCodes.CardNumberInvalidLength)
                 .Matches(numbersOnlyRegex)
-                    .WithMessage(ErrorCodes.CardNumberInvalidFormat)
-                .CreditCard()
-                    .WithMessage(ErrorCodes.CardNumberInvalid);
+                    .WithMessage(ErrorCodes.CardNumberInvalidFormat);
 
             
                 RuleFor(p => p.ExpiryMonth)
@@ -85,8 +83,7 @@ namespace PaymentGateway.Application.Dtos.Validators
 
         private bool IsFutureData(int expiryMonth, int expiryYear)
         {
-            //keep the card valid during the last month
-            var expiryDate = new DateTime(year: expiryYear, month: expiryMonth + 1, day: 1);
+            var expiryDate = new DateTime(year: expiryYear, month: expiryMonth, day: 1);
 
             return expiryDate > DateTime.Today;
         }
