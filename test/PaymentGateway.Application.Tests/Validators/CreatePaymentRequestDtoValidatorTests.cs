@@ -141,7 +141,7 @@ namespace PaymentGateway.Application.Tests.Validators
         }
 
         [Theory]
-        [InlineData("USD")]
+        [InlineData("ALL")]
         public void Given_Currency_Not_Supported_When_Validator_Is_Invoked_Then_Should_Return_False(string currency)
         {
             // Given

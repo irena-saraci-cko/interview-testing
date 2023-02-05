@@ -7,7 +7,6 @@ using PaymentGateway.BankAcquirer.Services;
 using PaymentGateway.Common.ServiceResponses;
 using PaymentGateway.Domain.Entities;
 using PaymentGateway.Domain.Enums;
-
 using Logger = Serilog.ILogger;
 
 namespace PaymentGateway.Application.Service
@@ -17,7 +16,11 @@ namespace PaymentGateway.Application.Service
         private readonly IMapper _mapper;
         private readonly IAcquirerService _acquirerService;
         private readonly Logger _logger;
-        private static List<Payment> _payments = new List<Payment>();
+        public static List<Payment> _payments = new List<Payment>(){
+            new Payment() {
+                Id = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6")
+            }
+        };
         public PaymentProcessorService(IMapper mapper, IAcquirerService acquirerService, Logger logger)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
