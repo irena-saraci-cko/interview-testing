@@ -1,9 +1,11 @@
+using PaymentGateway.Application.Dtos;
 using PaymentGateway.Application.Dtos.CreatePayment;
+using PaymentGateway.Common.ServiceResponses;
 
 namespace PaymentGateway.Application.Service
 {
     public interface IPaymentProcessorService
     {
-         Task<CreatePaymentResponseDto> CreatePayment(CreatePaymentRequestDto paymentRequest);
+         Task<ServiceResponse<CreatePaymentResponseDto>> CreatePayment(CreatePaymentRequestDto paymentRequest);
     }
 }

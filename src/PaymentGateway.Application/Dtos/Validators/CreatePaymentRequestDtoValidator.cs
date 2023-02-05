@@ -1,7 +1,6 @@
 using FluentValidation;
-
 using PaymentGateway.Application.Dtos.CreatePayment;
-using PaymentGateway.Domain.Helpers;
+using PaymentGateway.Common.Helpers;
 
 namespace PaymentGateway.Application.Dtos.Validators
 {

@@ -1,4 +1,4 @@
-namespace PaymentGateway.Application.Dtos
+namespace PaymentGateway.Common.ServiceResponses
 {
     public record ValidationError(string PaymentStatus, string ErrorCode, List<string> ErrorMessages);
 }

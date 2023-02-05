@@ -2,7 +2,7 @@ using PaymentGateway.Application.Dtos.Validators;
 using AutoFixture;
 using PaymentGateway.Application.Dtos.CreatePayment;
 using Shouldly;
-using PaymentGateway.Domain.Helpers;
+using PaymentGateway.Common.Helpers;
 
 namespace PaymentGateway.Application.Tests.Validators
 {
@@ -227,7 +227,7 @@ namespace PaymentGateway.Application.Tests.Validators
                     .ShouldBeTrue();
         }
 
-         [Theory]
+        [Theory]
         [InlineData("XYZ")]
         [InlineData("22X")]
         public void Given_Cvv_Invalid_Format_When_Validator_Is_Invoked_Then_Should_Return_False(string cvv)
@@ -244,7 +244,5 @@ namespace PaymentGateway.Application.Tests.Validators
                 .Exists(e => e.ErrorMessage.Equals(ErrorCodes.CvvInvalidFormat))
                     .ShouldBeTrue();
         }
-
-
     }
 }

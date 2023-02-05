@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-
-using PaymentGateway.Application.Dtos;
+using PaymentGateway.Common.ServiceResponses;
 
 namespace PaymentGateway.Api.Filters
 {

@@ -1,4 +1,4 @@
-namespace PaymentGateway.Domain.Helpers
+namespace PaymentGateway.Common.Helpers
 {
     public static class ErrorCodes
     {

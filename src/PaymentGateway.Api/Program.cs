@@ -28,6 +28,10 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<CreatePaymentRequestDto>, CreatePaymentRequestDtoValidator>();
 builder.Services.AddScoped<IPaymentProcessorService, PaymentProcessorService>();
 builder.Services.AddScoped<IAcquirerService, AcquirerService>();
+builder.Services.AddHttpClient<IAcquirerService, AcquirerService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration.GetSection("Acquirer:BaseUrl").Value);
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

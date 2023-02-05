@@ -15,10 +15,18 @@ namespace PaymentGateway.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreatePaymentResponseDto>> Post(CreatePaymentRequestDto paymentRequest)
+        public async Task<IActionResult> Post(CreatePaymentRequestDto paymentRequest)
         {
             var result = await _paymentProcessorService.CreatePayment(paymentRequest);
-            return Ok(result);
+
+            return result.Match<IActionResult>(
+                success => Created($"payments/{success.Id}", success),
+                validationError => new UnprocessableEntityObjectResult(validationError),
+                serverError => StatusCode(500),
+                BadGatewayError => StatusCode(502),
+                timeoutError => StatusCode(504)
+            );
+
         }
     }
 }

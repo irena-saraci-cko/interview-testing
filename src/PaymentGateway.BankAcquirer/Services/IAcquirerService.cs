@@ -1,8 +1,10 @@
 using PaymentGateway.BankAcquirer.Dtos;
+using PaymentGateway.Common.ServiceResponses;
+
 namespace PaymentGateway.BankAcquirer.Services
 {
     public interface IAcquirerService
     {
-         Task<CreatePaymentAcquirerResponse> CreatePayment(CreatePaymentAcquirerRequest paymentRequest);
+         Task<ServiceResponse<CreatePaymentAcquirerResponse>> CreatePayment(CreatePaymentAcquirerRequest paymentRequest);
     }
 }

@@ -1,8 +1,10 @@
 using AutoMapper;
 
+using PaymentGateway.Application.Dtos;
 using PaymentGateway.Application.Dtos.CreatePayment;
 using PaymentGateway.BankAcquirer.Dtos;
 using PaymentGateway.BankAcquirer.Services;
+using PaymentGateway.Common.ServiceResponses;
 using PaymentGateway.Domain.Entities;
 using PaymentGateway.Domain.Enums;
 
@@ -18,16 +20,27 @@ namespace PaymentGateway.Application.Service
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _acquirerService = acquirerService ?? throw new ArgumentNullException(nameof(acquirerService));
         }
-        public async Task<CreatePaymentResponseDto> CreatePayment(CreatePaymentRequestDto paymentRequest)
+        public async Task<ServiceResponse<CreatePaymentResponseDto>> CreatePayment(CreatePaymentRequestDto paymentRequest)
         {
             //Send the request to the acquirer
             var acquirerResponse = await _acquirerService
                 .CreatePayment(_mapper.Map<CreatePaymentAcquirerRequest>(paymentRequest));
-            
+
+            return acquirerResponse.Match(
+                success => ProcessAcquirerResponse(success, paymentRequest),
+                validationError => new ValidationError(validationError.PaymentStatus, validationError.ErrorCode, validationError.ErrorMessages),
+                serverError => new BadGatewayError(),
+                BadGatewayError => new BadGatewayError(),
+                timeoutError => new TimeoutError()
+            );
+        }
+
+        private ServiceResponse<CreatePaymentResponseDto> ProcessAcquirerResponse(CreatePaymentAcquirerResponse acquirerResponse, CreatePaymentRequestDto paymentRequest)
+        {
             //save the payment
             var payment = _mapper.Map<Payment>(paymentRequest);
             payment.Id = Guid.NewGuid();
-            payment.Status = acquirerResponse.Authorized ? PaymentStatus.Authorized : PaymentStatus.Declined;
+            payment.Status = acquirerResponse!.Authorized ? PaymentStatus.Authorized : PaymentStatus.Declined;
             payment.AuthorizationCode = acquirerResponse.AuthorizationCode;
             _payments.Add(payment);
 
