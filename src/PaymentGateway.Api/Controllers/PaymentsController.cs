@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
+using PaymentGateway.Application.Dtos.GetPayment;
 using PaymentGateway.Application.Service;
 
 namespace PaymentGateway.Api.Controllers
@@ -15,17 +16,42 @@ namespace PaymentGateway.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(CreatePaymentRequestDto paymentRequest)
+        public async Task<ActionResult<CreatePaymentApiResponse>> Post(CreatePaymentApiRequest paymentRequest)
         {
             var result = await _paymentProcessorService.CreatePayment(paymentRequest);
 
-            return result.Match<IActionResult>(
+            return result.Match<ActionResult<CreatePaymentApiResponse>>(
                 success => Created($"payments/{success.Id}", success),
                 validationError => new UnprocessableEntityObjectResult(validationError),
+                notFoundError => NotFound(),
                 serverError => StatusCode(500),
                 BadGatewayError => StatusCode(502),
                 timeoutError => StatusCode(504)
             );
+
+        }
+
+        [HttpGet]
+        [Route("{paymentId}")]
+        public async Task<ActionResult<GetPaymentApiResponse>> Get(string paymentId)
+        {
+            if (Guid.TryParse(paymentId, out Guid id))
+            {
+                var result = await _paymentProcessorService.GetPayment(id);
+
+                return result.Match<ActionResult<GetPaymentApiResponse>>(
+                    success => Ok(success),
+                    validationError => new UnprocessableEntityObjectResult(validationError),
+                    notFoundError => NotFound(),
+                    serverError => StatusCode(500),
+                    BadGatewayError => StatusCode(502),
+                    timeoutError => StatusCode(504)
+                );
+            }
+            else
+            {
+                return NotFound();
+            }
 
         }
     }

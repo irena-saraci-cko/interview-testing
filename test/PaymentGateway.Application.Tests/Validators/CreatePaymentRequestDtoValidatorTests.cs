@@ -10,12 +10,12 @@ namespace PaymentGateway.Application.Tests.Validators
     {
         private Fixture _fixture;
         private CreatePaymentRequestDtoValidator _sut;
-        private CreatePaymentRequestDto _createPaymentRequestDto;
+        private CreatePaymentApiRequest _createPaymentRequestDto;
         public CreatePaymentRequestDtoValidatorTests()
         {
             _fixture = new Fixture();
             _sut = new CreatePaymentRequestDtoValidator();
-            _createPaymentRequestDto = _fixture.Build<CreatePaymentRequestDto>()
+            _createPaymentRequestDto = _fixture.Build<CreatePaymentApiRequest>()
                 .With(r => r.CardNumber, "2222405343248877")
                 .With(r => r.ExpiryMonth, 1)
                 .With(r => r.ExpiryYear, 2029)

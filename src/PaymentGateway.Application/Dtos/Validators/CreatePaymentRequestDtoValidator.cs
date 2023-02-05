@@ -4,7 +4,7 @@ using PaymentGateway.Common.Helpers;
 
 namespace PaymentGateway.Application.Dtos.Validators
 {
-    public class CreatePaymentRequestDtoValidator : AbstractValidator<CreatePaymentRequestDto>
+    public class CreatePaymentRequestDtoValidator : AbstractValidator<CreatePaymentApiRequest>
     {
         private static readonly string[] availableCurrencies = new string[] { "USD", "EUR", "GBP" };
         private static readonly string numbersOnlyRegex = "^[0-9]*$";

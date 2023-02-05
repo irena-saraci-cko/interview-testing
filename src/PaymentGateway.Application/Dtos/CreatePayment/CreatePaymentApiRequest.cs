@@ -1,6 +1,6 @@
 namespace PaymentGateway.Application.Dtos.CreatePayment
 {
-    public record CreatePaymentRequestDto
+    public record CreatePaymentApiRequest
     {
         public string CardNumber { get; init; } = string.Empty;
         public int ExpiryMonth { get; init; }

@@ -1,6 +1,6 @@
-namespace PaymentGateway.Application.Dtos.CreatePayment
+namespace PaymentGateway.Application.Dtos.GetPayment
 {
-    public record CreatePaymentResponseDto
+    public record GetPaymentApiResponse
     {
         public Guid Id { get; set; }
         public string MaskedCardNumber { get; init; } = string.Empty;
