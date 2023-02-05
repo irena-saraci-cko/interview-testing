@@ -22,5 +22,10 @@ namespace PaymentGateway.Common.ServiceResponses
              new ServiceResponse<T>(timeoutError);
 
         public bool IsSuccess => this.IsT0;
+        public bool IsValidationError => this.IsT1;
+        public bool IsNotFoundError => this.IsT2;
+        public bool IsServerError => this.IsT3;
+        public bool IsBadGatewayError => this.IsT4;
+        public bool IsTimeoutError => this.IsT5;
     }
 }

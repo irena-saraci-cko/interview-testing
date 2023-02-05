@@ -9,7 +9,6 @@ using PaymentGateway.BankAcquirer.Dtos;
 
 using Logger = Serilog.ILogger;
 using Shouldly;
-using PaymentGateway.Domain.Enums;
 using PaymentGateway.Common.ServiceResponses;
 using PaymentGateway.Domain.Entities;
 
@@ -57,7 +56,7 @@ namespace PaymentGateway.Application.Tests.Services
             var result = await _sut.CreatePayment(_paymentRequest);
 
             // Then
-            result.IsT0.ShouldBeTrue();
+            result.IsSuccess.ShouldBeTrue();
         }
 
         [Fact]
@@ -71,7 +70,7 @@ namespace PaymentGateway.Application.Tests.Services
             var result = await _sut.CreatePayment(_paymentRequest);
 
             // Then
-            result.IsT0.ShouldBeTrue();
+            result.IsSuccess.ShouldBeTrue();
         }
 
         [Fact]
@@ -85,7 +84,7 @@ namespace PaymentGateway.Application.Tests.Services
             var result = await _sut.CreatePayment(_paymentRequest);
 
             // Then
-            result.IsT1.ShouldBeTrue();
+            result.IsValidationError.ShouldBeTrue();
         }
 
         [Fact]
@@ -99,7 +98,7 @@ namespace PaymentGateway.Application.Tests.Services
             var result = await _sut.CreatePayment(_paymentRequest);
 
             // Then
-            result.IsT4.ShouldBeTrue();
+            result.IsBadGatewayError.ShouldBeTrue();
         }
 
         [Fact]
@@ -113,7 +112,7 @@ namespace PaymentGateway.Application.Tests.Services
             var result = await _sut.CreatePayment(_paymentRequest);
 
             // Then
-            result.IsT5.ShouldBeTrue();
+            result.IsTimeoutError.ShouldBeTrue();
         }
 
         [Theory]
@@ -127,7 +126,7 @@ namespace PaymentGateway.Application.Tests.Services
             var result = await _sut.GetPayment(_paymentId);
 
             // Then
-            result.IsT0.ShouldBeTrue();
+            result.IsSuccess.ShouldBeTrue();
         }
 
         [Fact]
@@ -137,7 +136,7 @@ namespace PaymentGateway.Application.Tests.Services
             var result = await _sut.GetPayment(_paymentId);
 
             // Then
-            result.IsT2.ShouldBeTrue();
+            result.IsNotFoundError.ShouldBeTrue();
         }
     }
 }
