@@ -76,6 +76,7 @@ namespace PaymentGateway.BankAcquirer.Services
             }
         }
 
+        //TODO: Move to a helper class
         private static JsonSerializerSettings GetSettings()
         {
             var settings = new JsonSerializerSettings()
